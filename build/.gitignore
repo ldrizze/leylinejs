@@ -1,0 +1,4 @@
+# Ignore all files in build folder
+# The build system rebuild server at every deploy
+*
+!.gitignore
