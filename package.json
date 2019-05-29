@@ -1,0 +1,21 @@
+{
+  "name": "leylinejs",
+  "version": "1.0.0-alpha.1",
+  "description": "A game server framework that integrates with Phaser JS.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ldrizze/leylinejs.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ldrizze/leylinejs/issues"
+  },
+  "homepage": "https://github.com/ldrizze/leylinejs#readme"
+}
