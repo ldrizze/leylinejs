@@ -21,4 +21,13 @@ export abstract class Payload {
   toString () {
     return this.data.toString()
   }
+
+  toJson () {
+    try {
+      return JSON.parse(this.data)
+    } catch (error) {
+      console.error('error trying to parse json data', this.data)
+      return this.data
+    }
+  }
 }
