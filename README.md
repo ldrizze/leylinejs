@@ -11,7 +11,7 @@ A game server framework that integrates with Phaser JS.
 
 # Changelogs
 
-Nothing... for while...
+Nothing so far...
 
 # TODO
 
