@@ -9,7 +9,7 @@ export abstract class Payload {
   /**
    * User instance from main user collections
    */
-  protected _user: User
+  public user: User
 
   /**
    * Compose payload based on user identification and the data received from driver
@@ -17,13 +17,6 @@ export abstract class Payload {
    * @param data Data received from respective driver
    */
   constructor (protected userIdentification: string, protected data: string) {}
-
-  /**
-   * Allow get user but never manipulate the pointer
-   */
-  get user (): User {
-    return this._user
-  }
 
   toString () {
     return this.data.toString()
