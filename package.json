@@ -19,7 +19,12 @@
   },
   "homepage": "https://github.com/ldrizze/leylinejs#readme",
   "devDependencies": {
+    "@types/uuid": "^3.4.4",
     "tslint": "^5.17.0",
     "tslint-config-standard": "^8.0.1"
+  },
+  "dependencies": {
+    "@types/socket.io": "^2.1.2",
+    "socket.io": "^2.2.0"
   }
 }
