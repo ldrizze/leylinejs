@@ -1,9 +1,14 @@
 export class Collection<T> {
 
-  public list: []
+  protected list: Array<any>
 
   constructor (protected key: string) {
-    this.list = []
+    this.list = new Array<any>()
+  }
+
+  public add (item: T): Collection<T> {
+    this.list.push(item)
+    return this
   }
 
   public remove (key: string): boolean {
