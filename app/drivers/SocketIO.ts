@@ -39,7 +39,6 @@ export class SocketIODriver extends Driver {
     this.io = socketio(this.http)
     this.connectedUsers = new Collection<SocketUser>('uid')
     this.io.on('connection', this.handleNewConnection.bind(this))
-    this.io.on('disconnect', this.handleDisconnect.bind(this))
   }
 
   /**
@@ -90,6 +89,8 @@ export class SocketIODriver extends Driver {
     let socketUser: SocketUser = new SocketUser(userIdentification, socket)
     this.connectedUsers.add(socketUser)
     socket.uid = userIdentification
+    this.io.on('ping', this.handleReceive.bind(this))
+    this.io.on('disconnect', this.handleDisconnect.bind(this))
     console.log(`new user connection: ${socketUser.uid}`)
   }
 
@@ -99,5 +100,16 @@ export class SocketIODriver extends Driver {
    */
   private handleDisconnect (socket: any): void {
     this.onCloseFn(socket.uid)
+  }
+
+  /**
+   * Handle 
+   * @param socket Socket instance
+   * @param data Data received from event
+   */
+  private handleReceive (socket: any, data: any) {
+    // TODO - Mockup event 'ping' and response 'pong'
+    this.onReceiveFn(socket.uid, 'ping', data)
+    console.log(socket, data)
   }
 }
