@@ -2,15 +2,16 @@
 
 A game server framework that integrates with Phaser JS.
 
-# Thecnical Specs
+# Technical Specs
 
 - Repository workflow: Gitflow
 - Language: TypeScript
 - Node version to run: 10.x
+- Code style: Standard
 
 # Changelogs
 
-Nothing... for while...
+Nothing so far...
 
 # TODO
 
