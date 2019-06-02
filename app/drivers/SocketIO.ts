@@ -39,6 +39,7 @@ export class SocketIODriver extends Driver {
     this.io = socketio(this.http)
     this.connectedUsers = new Collection<SocketUser>('uid')
     this.io.on('connection', this.handleNewConnection.bind(this))
+    this.io.on('disconnect', this.handleDisconnect.bind(this))
   }
 
   /**
@@ -88,6 +89,15 @@ export class SocketIODriver extends Driver {
     let userIdentification = this.onConnectFn()
     let socketUser: SocketUser = new SocketUser(userIdentification, socket)
     this.connectedUsers.add(socketUser)
+    socket.uid = userIdentification
     console.log(`new user connection: ${socketUser.uid}`)
+  }
+
+  /**
+   * Handle disconnection from client
+   * @param socket Socket instance from SocketIO
+   */
+  private handleDisconnect (socket: any): void {
+    this.onCloseFn(socket.uid)
   }
 }
