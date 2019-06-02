@@ -103,7 +103,7 @@ export class SocketIODriver extends Driver {
   }
 
   /**
-   * Handle 
+   * Handle client events
    * @param socket Socket instance
    * @param data Data received from event
    */
