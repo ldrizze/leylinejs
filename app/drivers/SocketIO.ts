@@ -1,9 +1,16 @@
 import { Driver, Payload, Collection, User } from '../classes'
 import * as socketio from 'socket.io'
 import * as http from 'http'
-import * as uuid from 'uuid'
 
+/**
+ * Represents the SocketIO linked at System User
+ */
 class SocketUser {
+  /**
+   * Link an user identification with a socket instance
+   * @param uid User identification
+   * @param sock SocketIO user instance
+   */
   constructor (public uid: string, public sock: any) {}
 }
 
@@ -78,7 +85,8 @@ export class SocketIODriver extends Driver {
    * @param socket Socket that SocketIO created to communicate between system and client
    */
   private handleNewConnection (socket: any): void {
-    let socketUser: SocketUser = new SocketUser(uuid(), socket)
+    let userIdentification = this.onConnectFn()
+    let socketUser: SocketUser = new SocketUser(userIdentification, socket)
     this.connectedUsers.add(socketUser)
     console.log(`new user connection: ${socketUser.uid}`)
   }
