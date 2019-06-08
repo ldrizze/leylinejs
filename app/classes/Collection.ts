@@ -37,7 +37,7 @@ export class Collection<T> {
    * Search and return an item from the internal list
    * @param key Key to compare
    */
-  public find (key: string): T {
+  public find (key: string): T | null {
     for (let i in this.list) {
       if (this.list[i][this.key] === key) return this.list[i]
     }

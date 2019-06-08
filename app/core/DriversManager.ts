@@ -8,14 +8,29 @@ export class DriversManager {
    * Attach the main driver to communicate
    * @param driver Main driver
    */
-  public static attachDriver (driverInstance: any) {
-    let driver = new driverInstance(this.onConnectFn, this.onReceiveFn, this.onCloseFn) as Driver
+  public static attachDriver (driverInstance: new (onConnectFn: Function, onReceiveFn: Function, onCloseFn: Function, events: []) => Driver) {
+    this.driver = new driverInstance(this.onConnectFn, this.onReceiveFn, this.onCloseFn, [])
+    this.driver.initialize()
+  }
+
+  /**
+   * Start driver listening
+   * @param listenPort Port to be listened
+   */
+  public static start (listenPort: string | undefined) {
+    console.log('Starting the main driver')
+    if (listenPort === undefined) {
+      console.error('process.env.PORT wont be undefined')
+    } else {
+      console.log(`Listening on port: ${listenPort}`)
+      this.driver.listen(listenPort)
+    }
   }
 
   /**
    * Driver callback when new connection is established
    */
-  public static onConnectFn () {
+  private static onConnectFn () {
     return UsersManager.createUser().identification
   }
 
@@ -25,7 +40,7 @@ export class DriversManager {
    * @param event Event to trigger
    * @param data Payload data
    */
-  public static onReceiveFn (userIdentification: string, event: string, data: string) {
+  private static onReceiveFn (userIdentification: string, event: string, data: string) {
     let user = UsersManager.getUser(userIdentification)
 
     if (user) { // Make payload
@@ -44,7 +59,7 @@ export class DriversManager {
    * Driver callback when an active connection is closed
    * @param userIdentification User identification received from onConnectFn
    */
-  public static onCloseFn (userIdentification: string) {
+  private static onCloseFn (userIdentification: string) {
     return UsersManager.removeUser(userIdentification)
   }
 }

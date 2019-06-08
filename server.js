@@ -1,1 +1,3 @@
-console.log('I just can display this for you... for while...')
+console.log('########## Starting server ##########')
+require('./build/Main')
+console.log('########## Server started ##########')
