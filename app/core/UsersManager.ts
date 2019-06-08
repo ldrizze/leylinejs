@@ -27,7 +27,7 @@ export class UsersManager {
    * Get an user from active users list
    * @param identification User identification
    */
-  public static getUser (identification: string): User {
+  public static getUser (identification: string): User | null {
     return this.users.find(identification)
   }
 }

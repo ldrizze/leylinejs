@@ -6,7 +6,9 @@
         "experimentalDecorators": true,
         "noImplicitAny": true,
         "noImplicitReturns": true,
-        "outDir" : "build"
+        "outDir" : "build",
+        "strictNullChecks": true,
+        "extendedDiagnostics": true
     },
     "include": [
         "app"

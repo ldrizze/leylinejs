@@ -45,7 +45,7 @@ export class SocketIODriver extends Driver {
    * Listen for new connection through HTTP and Websockets over SocketIO
    * @param port Port to listen HTTP
    */
-  public listen (port: number): void {
+  public listen (port: string): void {
     this.http.listen(port)
   }
 
@@ -89,8 +89,9 @@ export class SocketIODriver extends Driver {
     let socketUser: SocketUser = new SocketUser(userIdentification, socket)
     this.connectedUsers.add(socketUser)
     socket.uid = userIdentification
-    this.io.on('ping', this.handleReceive.bind(this))
-    this.io.on('disconnect', this.handleDisconnect.bind(this))
+    socket.on('ping', this.handleReceive.bind(this)) // TODO - Ping event for tests
+    socket.on('disconnect', this.handleDisconnect.bind(this))
+    this.assignEventsOnNewConnection(socket)
     console.log(`new user connection: ${socketUser.uid}`)
   }
 
@@ -111,5 +112,15 @@ export class SocketIODriver extends Driver {
     // TODO - Mockup event 'ping' and response 'pong'
     this.onReceiveFn(socket.uid, 'ping', data)
     console.log(socket, data)
+  }
+
+  /**
+   * Register new connection on all server events
+   * @param socket Socket instance
+   */
+  private assignEventsOnNewConnection (socket: any) {
+    this.events.forEach(eventName => {
+      socket.on(eventName, this.handleReceive)
+    })
   }
 }
