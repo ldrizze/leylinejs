@@ -53,4 +53,8 @@ export class Collection<T> {
     return this.find(key) !== null
   }
 
+  get length () {
+    return this.list.length
+  }
+
 }
