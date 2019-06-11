@@ -23,7 +23,7 @@ Server tasks:
 - [ ] Core Modules
     - [ ] User authentication
     - [ ] Role identification
-    - [ ] Drivers connection
+    - [x] Drivers connection
     - [ ] Game Manager
     - [ ] Client prediction / Server reconciliation system
     - [ ] Lag compensation system

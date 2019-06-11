@@ -11,16 +11,20 @@ export class UsersManager {
   /**
    * Create new User
    */
-  public static createUser () {
-    return new User(uuid())
+  public static createUser (): User {
+    const user = new User(uuid())
+    this.users.add(user)
+    return user
   }
 
   /**
    * Remove user from active users list
    * @param identification User identification
    */
-  public static removeUser (identification: string) {
-    return this.users.remove(identification)
+  public static removeUser (identification: string): void {
+    this.users.remove(identification)
+    console.log(`user ${identification} has been removed`)
+    console.log(`remaining users ${this.users.length}`)
   }
 
   /**

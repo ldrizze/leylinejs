@@ -4,9 +4,10 @@
   "description": "A game server framework that integrates with Phaser JS.",
   "main": "server.js",
   "scripts": {
-    "build": "tsc",
+    "build": "npx tsc",
     "start": "npm run build && node server",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start-server": "node server",
+    "test": "npx mocha"
   },
   "repository": {
     "type": "git",
@@ -21,12 +22,16 @@
   "homepage": "https://github.com/ldrizze/leylinejs#readme",
   "devDependencies": {
     "@types/uuid": "^3.4.4",
+    "chai": "^4.2.0",
+    "mocha": "^6.1.4",
+    "socket.io-client": "^2.2.0",
     "tslint": "^5.17.0",
     "tslint-config-standard": "^8.0.1"
   },
   "dependencies": {
     "@types/socket.io": "^2.1.2",
     "socket.io": "^2.2.0",
+    "typescript": "^3.5.1",
     "uuid": "^3.3.2"
   }
 }
