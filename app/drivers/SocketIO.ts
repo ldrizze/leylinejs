@@ -1,4 +1,5 @@
 import { Driver, Payload, Collection, User } from '../classes'
+import { DriversManager } from '../core'
 import * as socketio from 'socket.io'
 import * as http from 'http'
 
@@ -9,9 +10,13 @@ class SocketUser {
   /**
    * Link an user identification with a socket instance
    * @param uid User identification
-   * @param sock SocketIO user instance
+   * @param socket SocketIO user instance
+   * @param disconnectFn Disconnect function trigger
    */
-  constructor (public uid: string, public sock: any) {}
+  constructor (public uid: string, public socket: any, private receiveFn: Function, private disconnectFn: Function) {
+    socket.on('disconnect', () => this.disconnectFn(this))
+    socket.on('LLping', (data: any) => this.receiveFn(this, data)) // TODO - Ping event for tests
+  }
 }
 
 export class SocketIODriver extends Driver {
@@ -55,7 +60,7 @@ export class SocketIODriver extends Driver {
    */
   public send (payload: Payload): void {
     let userSocket = this.connectedUsers.find(payload.user.identification)
-    if (userSocket) userSocket.sock.send(payload)
+    if (userSocket) userSocket.socket.emit('LLpong', payload.data)
     else console.warn(`user not found in socket ${payload.user.identification}`)
   }
 
@@ -65,7 +70,7 @@ export class SocketIODriver extends Driver {
    */
   public close (user: User): void {
     let userSocket = this.connectedUsers.find(user.identification)
-    if (userSocket) userSocket.sock.close()
+    if (userSocket) userSocket.socket.disconnect()
     else console.warn(`user not found in socket ${user.identification}`)
   }
 
@@ -85,13 +90,17 @@ export class SocketIODriver extends Driver {
    * @param socket Socket that SocketIO created to communicate between system and client
    */
   private handleNewConnection (socket: any): void {
-    let userIdentification = this.onConnectFn()
-    let socketUser: SocketUser = new SocketUser(userIdentification, socket)
+    let userIdentification = DriversManager.onConnectFn()
+    let socketUser: SocketUser = new SocketUser(userIdentification, socket,
+      (socketUser: SocketUser, data: any) => {
+        this.handleReceive(socketUser, data)
+      },
+      (socketUser: SocketUser) => {
+        this.handleDisconnect(socketUser)
+      })
     this.connectedUsers.add(socketUser)
-    socket.uid = userIdentification
-    socket.on('ping', this.handleReceive.bind(this)) // TODO - Ping event for tests
-    socket.on('disconnect', this.handleDisconnect.bind(this))
     this.assignEventsOnNewConnection(socket)
+    socket.emit('connection-accepted')
     console.log(`new user connection: ${socketUser.uid}`)
   }
 
@@ -99,8 +108,9 @@ export class SocketIODriver extends Driver {
    * Handle disconnection from client
    * @param socket Socket instance from SocketIO
    */
-  private handleDisconnect (socket: any): void {
-    this.onCloseFn(socket.uid)
+  private handleDisconnect (socketUser: SocketUser): void {
+    console.log(`user disconnected: ${socketUser.uid}`)
+    DriversManager.onCloseFn(socketUser.uid)
   }
 
   /**
@@ -108,10 +118,10 @@ export class SocketIODriver extends Driver {
    * @param socket Socket instance
    * @param data Data received from event
    */
-  private handleReceive (socket: any, data: any) {
+  private handleReceive (socketUser: SocketUser, data: any) {
     // TODO - Mockup event 'ping' and response 'pong'
-    this.onReceiveFn(socket.uid, 'ping', data)
-    console.log(socket, data)
+    DriversManager.onReceiveFn(socketUser.uid, 'LLping', data)
+    console.log(socketUser.uid, data)
   }
 
   /**

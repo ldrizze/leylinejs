@@ -12,7 +12,9 @@ export class UsersManager {
    * Create new User
    */
   public static createUser () {
-    return new User(uuid())
+    const user = new User(uuid())
+    this.users.add(user)
+    return user
   }
 
   /**

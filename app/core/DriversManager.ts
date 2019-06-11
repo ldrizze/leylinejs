@@ -1,4 +1,4 @@
-import { Driver, Payload, User } from '../classes'
+import { Driver, Payload } from '../classes'
 import { UsersManager } from './UsersManager'
 
 export class DriversManager {
@@ -8,8 +8,8 @@ export class DriversManager {
    * Attach the main driver to communicate
    * @param driver Main driver
    */
-  public static attachDriver (driverInstance: new (onConnectFn: Function, onReceiveFn: Function, onCloseFn: Function, events: []) => Driver) {
-    this.driver = new driverInstance(this.onConnectFn, this.onReceiveFn, this.onCloseFn, [])
+  public static attachDriver (driverInstance: new (events: []) => Driver) {
+    this.driver = new driverInstance([])
     this.driver.initialize()
   }
 
@@ -20,7 +20,7 @@ export class DriversManager {
   public static start (listenPort: string | undefined) {
     console.log('Starting the main driver')
     if (listenPort === undefined) {
-      console.error('process.env.PORT wont be undefined')
+      throw new Error('process.env.PORT wont be undefined')
     } else {
       console.log(`Listening on port: ${listenPort}`)
       this.driver.listen(listenPort)
@@ -30,7 +30,7 @@ export class DriversManager {
   /**
    * Driver callback when new connection is established
    */
-  private static onConnectFn () {
+  public static onConnectFn () {
     return UsersManager.createUser().identification
   }
 
@@ -40,7 +40,7 @@ export class DriversManager {
    * @param event Event to trigger
    * @param data Payload data
    */
-  private static onReceiveFn (userIdentification: string, event: string, data: string) {
+  public static onReceiveFn (userIdentification: string, event: string, data: string) {
     let user = UsersManager.getUser(userIdentification)
 
     if (user) { // Make payload
@@ -59,7 +59,7 @@ export class DriversManager {
    * Driver callback when an active connection is closed
    * @param userIdentification User identification received from onConnectFn
    */
-  private static onCloseFn (userIdentification: string) {
+  public static onCloseFn (userIdentification: string) {
     return UsersManager.removeUser(userIdentification)
   }
 }
